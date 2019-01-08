@@ -130,7 +130,7 @@ function List(props) {
   );
 }
 function AllLists() {
-  const { lists, isLoading, addList, load, getServerLists } = useContext(
+  const { lists, isLoading, addList, load } = useContext(
     FaunaCtx
   );
   const onSubmit = title => load(addList(title));
@@ -166,12 +166,8 @@ const Wrapper = props => props.children;
 
 export default function App(props) {
   const fauna = useFauna();
-  const { load, onAuthChange, getServerLists } = fauna;
-  const identity = useNetlifyIdentity(faunadb_token => {
-    onAuthChange(faunadb_token).then(_client => {
-      if (_client) load(getServerLists(_client));
-    });
-  });
+  const { onAuthChange } = fauna;
+  const identity = useNetlifyIdentity(onAuthChange);
 
   return (
     <FaunaCtx.Provider value={fauna}>
